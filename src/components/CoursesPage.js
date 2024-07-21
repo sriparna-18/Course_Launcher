@@ -7,7 +7,7 @@ import './CoursesPage.css';
 Modal.setAppElement('#root');
 
 const courses = [
-  { id: 1, title: 'Course 1', description: 'Description for Course 1' },
+  { id: 1, title: 'Bridge Course for Basic Mathematics', description: 'Matrices, Integration and Differentiation concepts' },
   { id: 2, title: 'Course 2', description: 'Description for Course 2' },
   // Add more courses as needed
 ];
