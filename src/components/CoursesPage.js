@@ -1,78 +1,45 @@
 // src/components/CoursesPage.js
 import React, { useState } from 'react';
-import Modal from 'react-modal';
-import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
+import { FaShoppingCart } from 'react-icons/fa';
 import './CoursesPage.css';
 
-Modal.setAppElement('#root');
-
 const courses = [
-  { id: 1, title: 'Bridge Course for Basic Mathematics', description: 'Matrices, Integration and Differentiation concepts' },
-  { id: 2, title: 'Course 2', description: 'Description for Course 2' },
+  { id: 1, title: 'Bridge Course for Basic Mathematics', description: 'Matrices, Integration and Differentiation concepts', price: 100 },
+  { id: 2, title: 'Course 2', description: 'Description for Course 2', price: 150 },
   // Add more courses as needed
 ];
 
 const CoursesPage = () => {
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [selectedCourse, setSelectedCourse] = useState(null);
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const [cart, setCart] = useState([]);
+  const navigate = useNavigate();
 
-  const openModal = (course) => {
-    setSelectedCourse(course);
-    setModalIsOpen(true);
+  const addToCart = (course) => {
+    if (!cart.includes(course)) {
+      setCart([...cart, course]);
+    }
   };
 
-  const closeModal = () => {
-    setModalIsOpen(false);
-  };
-
-  const onSubmit = (data) => {
-    console.log('User Data:', data);
-    closeModal();
+  const goToCart = () => {
+    navigate('/cart', { state: { cart } });
   };
 
   return (
     <div className="courses-page">
-      <h1>Our Courses</h1>
+      <div className="header">
+        <h1>Our Courses</h1>
+        <FaShoppingCart className="cart-icon" onClick={goToCart} />
+      </div>
       <div className="courses-list">
         {courses.map(course => (
           <div key={course.id} className="course-card">
             <h2>{course.title}</h2>
             <p>{course.description}</p>
-            <button onClick={() => openModal(course)}>Enroll</button>
+            <p>Price: ${course.price}</p>
+            <button onClick={() => addToCart(course)}>Add to Cart</button>
           </div>
         ))}
       </div>
-
-      <Modal
-        isOpen={modalIsOpen}
-        onRequestClose={closeModal}
-        contentLabel="User Authentication"
-        className="modal"
-        overlayClassName="modal-overlay"
-      >
-        <h2>Enroll in {selectedCourse?.title}</h2>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div>
-            <label>Email:</label>
-            <input
-              type="email"
-              {...register('email', { required: true })}
-            />
-            {errors.email && <span>This field is required</span>}
-          </div>
-          <div>
-            <label>Phone Number:</label>
-            <input
-              type="tel"
-              {...register('phone', { required: true })}
-            />
-            {errors.phone && <span>This field is required</span>}
-          </div>
-          <button type="submit">Submit</button>
-        </form>
-        <button onClick={closeModal}>Close</button>
-      </Modal>
     </div>
   );
 };
